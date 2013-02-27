@@ -41,6 +41,7 @@ namespace Gateway_DDS
  
         // variables we're concerned with
         private IDataHandle<bool> isflip;
+        private IDataHandle<float> zoomStage;
 
 
         public MainWindow()
@@ -62,7 +63,7 @@ namespace Gateway_DDS
                 device.EventManager.RegisterEventListener("SYSTEM.Error", new OnErrorDelegate(onError));
 
                 // launch IID script
-                device.CommandManager.SendCommand("IID.loadGraph", "finger.iid");
+                device.CommandManager.SendCommand("IID.loadGraph", "GateWay.iid");
             }
             catch (Exception e)
             {
@@ -111,12 +112,16 @@ namespace Gateway_DDS
             // update iisu data
             //Console.WriteLine("left_hand_up: " + left_hand_up.Value + "     right_hand_up: " + right_hand_up.Value + "      is_bowing: " + is_bowing.Value);
 
+            /*
             if (isflip.Value == true)
             {
                 feedback.Text = "Flipping";
             } else {
                 feedback.Text = "Not flipping";
             }
+             * */
+
+            feedback.Text = zoomStage.Value.ToString();
 
             device.ReleaseFrame();
             device.UpdateFrame(true);
@@ -133,8 +138,8 @@ namespace Gateway_DDS
 
             try
             {
-                isflip = device.RegisterDataHandle<bool>("IID.Script.isflip");
-                m_valid =  isflip.Valid;
+                zoomStage = device.RegisterDataHandle<float>("IID.Script.zoomStage");
+                m_valid =  zoomStage.Valid;
             }
             catch (Exception e)
             {

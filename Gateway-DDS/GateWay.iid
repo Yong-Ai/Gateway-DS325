@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IisuInteractionDesignerProject Version="3.0.20">
+  <Graph id="{04ebb97e-686f-4e4f-9c9c-f31ee8c27319}">
+    <Node id="{c59452ac-21f5-4b59-8c74-c9073f6571ba}" name="Label 3" type="visualizer:label">
+      <Input id="{de387d2a-53bd-4cc2-a7ef-8cfca49e6b88}" name="zoomStage" />
+    </Node>
+    <Link source="{e0822fe6-f217-4846-b670-bd35df239b73}" sourceoutput="{120b746f-8e44-49d0-ae1a-cd87c3e97cde}" destination="{c59452ac-21f5-4b59-8c74-c9073f6571ba}" destinationinput="{de387d2a-53bd-4cc2-a7ef-8cfca49e6b88}" />
+    <Node id="{e0822fe6-f217-4846-b670-bd35df239b73}" name="Script" type="lua script">
+      <Input id="{c6aced3f-823f-4abb-9784-db6135093850}" name="CI.HAND1.IsOpen" />
+      <Input id="{b9b327c7-1e26-4e37-97eb-a58cc3eba0ba}" name="CI.HAND2.IsOpen" />
+      <Input id="{3c909514-3f4d-4d26-ac6e-47f623f7ab5c}" name="CI.HAND1.TipPosition2D" />
+      <Input id="{e5632314-60bb-4972-8e00-e5805d865c2a}" name="CI.HAND2.TipPosition2D" />
+      <Input id="{24fe0b8c-e30a-4af8-ad54-bb5f9829a890}" name="CI.HAND2.FingerTipPositions2D" />
+      <Input id="{514f74f3-8b3a-4294-89cb-b007cbe88eb1}" name="CI.HAND2.PalmPosition2D" />
+      <Input id="{150c619a-5c4b-4ff8-8cf2-d63825c13064}" name="CI.HAND1.PalmPosition2D" />
+      <Input id="{2ca819aa-f660-4bb3-8911-6190fcc85e06}" name="CI.HAND1.FingerTipPositions2D" />
+      <Output id="{464d185a-11dc-47b2-a6d8-7afe2e510268}" name="handClosedText" />
+      <Output id="{45a2b1b6-2a95-47b4-be72-ba70d15562d7}" name="tip_leftx" />
+      <Output id="{92dab7d0-a9e9-4c36-af52-c966705b8222}" name="tip_lefty" />
+      <Output id="{4f3af7b5-c2a3-47c7-aae4-3c552bd5537c}" name="tip_righty" />
+      <Output id="{87c040ff-c2e3-48d5-ba18-bc77ff656b2b}" name="tip_rightx" />
+      <Output id="{120b746f-8e44-49d0-ae1a-cd87c3e97cde}" name="zoomStage" />
+      <CustomParameter id="{120b746f-8e44-49d0-ae1a-cd87c3e97cde}" />
+      <Content><![CDATA[function init()
+
+
+	zoomRate = 0.2
+
+
+	handClosed = false
+	handClosedText = "Open"
+	
+	old_r_x = 1000
+	old_r_y = 1000
+	old_l_x = -1
+	old_l_y = -1
+	
+	zoomStage = 0
+	
+end
+
+
+-- Approx value with threshold
+function approxEq(x, y)
+
+	local threshold = 30
+	
+	if math.abs( x-y ) < 30 then
+		return true
+	else
+		return false
+	end
+	
+	
+end
+
+
+------- DESCENDO--------
+function descendo(x,y)
+	local threshold_desc = 3
+	
+	if x > y+threshold_desc then
+		return true
+	else
+		return false
+	end
+end
+
+------- DESCENDO--------
+function crescendo(x,y)
+	local threshold_desc = 3
+	
+	if x+threshold_desc < y then
+		return true
+	else
+		return false
+	end
+end
+
+
+function main()
+
+tip_leftx = math.floor( CI_HAND2_TipPosition2D.x )
+tip_lefty = math.floor( CI_HAND2_TipPosition2D.y )
+
+tip_rightx =  math.floor( CI_HAND1_TipPosition2D.x )
+tip_righty =  math.floor( CI_HAND1_TipPosition2D.y )
+
+if zoomStage == 0 then
+
+	if CI_HAND1_IsOpen == false and CI_HAND2_IsOpen == false then
+
+		if approxEq( CI_HAND1_TipPosition2D.x, CI_HAND2_TipPosition2D.x ) then
+				if approxEq( CI_HAND1_TipPosition2D.y, CI_HAND2_TipPosition2D.y ) then
+						zoomStage = 1
+					old_r_x = 1000
+					old_r_y = 1000
+					old_l_x = -1
+					old_l_y = -1
+				end
+		else
+				zoomStage = -1
+				old_r_x = -1
+				old_r_y = -1
+				old_l_x = 1000
+				old_l_y = 1000
+		end
+	
+	end
+end
+
+-- for zoom in
+if zoomStage > 0 then
+
+	if CI_HAND1_IsOpen == true and CI_HAND2_IsOpen == true then
+		zoomStage = 0
+	else
+	
+		if descendo(old_r_x, CI_HAND1_TipPosition2D.x) or descendo(old_r_y, CI_HAND1_TipPosition2D.y) then
+			zoomStage  = zoomStage + zoomRate
+			old_r_x = CI_HAND1_TipPosition2D.x
+			old_r_y = CI_HAND1_TipPosition2D.y
+		end
+		
+		if crescendo(old_l_x, CI_HAND2_TipPosition2D.x) or crescendo(old_l_y, CI_HAND2_TipPosition2D.y) then
+			zoomStage  = zoomStage + zoomRate
+			old_l_x = CI_HAND2_TipPosition2D.x
+			old_l_y = CI_HAND2_TipPosition2D.y
+		end
+	
+	end
+
+end
+
+
+-- Zoom out
+if zoomStage < 0 then
+
+	if CI_HAND1_IsOpen == true and CI_HAND2_IsOpen == true then
+		zoomStage = 0
+	else
+	
+		if crescendo(old_r_x, CI_HAND1_TipPosition2D.x) or crescendo(old_r_y, CI_HAND1_TipPosition2D.y) then
+			zoomStage  = zoomStage - zoomRate
+			old_r_x = CI_HAND1_TipPosition2D.x
+			old_r_y = CI_HAND1_TipPosition2D.y
+		end
+		
+		if descendo(old_l_x, CI_HAND2_TipPosition2D.x) or descendo(old_l_y, CI_HAND2_TipPosition2D.y) then
+			zoomStage  = zoomStage - zoomRate
+			old_l_x = CI_HAND2_TipPosition2D.x
+			old_l_y = CI_HAND2_TipPosition2D.y
+		end
+	
+	
+	end
+end
+
+end
+]]></Content>
+    </Node>
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{6773f3c3-fc6b-44f0-a128-dfde3befc493}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{c6aced3f-823f-4abb-9784-db6135093850}" />
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{b90fb3b4-17f3-4f38-b922-12d9b9f3471f}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{b9b327c7-1e26-4e37-97eb-a58cc3eba0ba}" />
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{5467d247-b3b8-407e-9636-38c45936be06}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{3c909514-3f4d-4d26-ac6e-47f623f7ab5c}" />
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{4e735f86-832c-48cd-b5f7-6f7e2b455727}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{e5632314-60bb-4972-8e00-e5805d865c2a}" />
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{01f7e275-e706-4731-87c3-2dadef173913}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{24fe0b8c-e30a-4af8-ad54-bb5f9829a890}" />
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{35cc75d9-f01a-4c77-85d9-c44d4d932b93}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{514f74f3-8b3a-4294-89cb-b007cbe88eb1}" />
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{18672ebe-0143-439e-8379-a7c668827a29}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{150c619a-5c4b-4ff8-8cf2-d63825c13064}" />
+    <Link source="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" sourceoutput="{e6f8b610-5c35-4b5e-bcfe-61fa1de7d633}" destination="{e0822fe6-f217-4846-b670-bd35df239b73}" destinationinput="{2ca819aa-f660-4bb3-8911-6190fcc85e06}" />
+    <Node id="{bdf46cab-56aa-412b-9abc-daeaa5c786c3}" name="" type="iisu skeleton" />
+    <Node id="{2fb6de84-4cc7-4797-bcaf-296fb902682c}" name="" type="iisu device">
+      <Output id="{6773f3c3-fc6b-44f0-a128-dfde3befc493}" name="CI.HAND1.IsOpen" />
+      <Output id="{b90fb3b4-17f3-4f38-b922-12d9b9f3471f}" name="CI.HAND2.IsOpen" />
+      <Output id="{5467d247-b3b8-407e-9636-38c45936be06}" name="CI.HAND1.TipPosition2D" />
+      <Output id="{4e735f86-832c-48cd-b5f7-6f7e2b455727}" name="CI.HAND2.TipPosition2D" />
+      <Output id="{01f7e275-e706-4731-87c3-2dadef173913}" name="CI.HAND2.FingerTipPositions2D" />
+      <Output id="{35cc75d9-f01a-4c77-85d9-c44d4d932b93}" name="CI.HAND2.PalmPosition2D" />
+      <Output id="{18672ebe-0143-439e-8379-a7c668827a29}" name="CI.HAND1.PalmPosition2D" />
+      <Output id="{e6f8b610-5c35-4b5e-bcfe-61fa1de7d633}" name="CI.HAND1.FingerTipPositions2D" />
+    </Node>
+  </Graph>
+  <Movies />
+  <WindowLayout>
+    <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="0.25" DockTopPortion="0.25" DockBottomPortion="0.596078431372549" ActiveDocumentPane="1" ActivePane="-1">
+      <Contents Count="2">
+        <Content ID="0" PersistString="IID.FormDepth" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="1" PersistString="{c59452ac-21f5-4b59-8c74-c9073f6571ba}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      </Contents>
+      <Panes Count="2">
+        <Pane ID="0" DockState="DockBottom" ActiveContent="0">
+          <Contents Count="1">
+            <Content ID="0" RefID="0" />
+          </Contents>
+        </Pane>
+        <Pane ID="1" DockState="Document" ActiveContent="1">
+          <Contents Count="1">
+            <Content ID="0" RefID="1" />
+          </Contents>
+        </Pane>
+      </Panes>
+      <DockWindows>
+        <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+        <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="4">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="2" DockState="DockRight" ZOrderIndex="5">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="3" DockState="DockTop" ZOrderIndex="6">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="3">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+      </DockWindows>
+      <FloatWindows Count="0" />
+    </DockPanel>
+  </WindowLayout>
+  <Visualization3D userCentroidsVisible="False" userCentroidVelocitiesVisible="False" skeletonVisible="False" uiControllerVisible="False" uiPointerVisible="False" umActivationZonesVisible="False" umActivationZoneLabelsVisible="False" userBoundingBoxVisible="False" userLabelVisible="False" userPointsVisible="False" userMassCenterVisible="False" userHeightVisible="False" userBodyDirVisible="False" userPrincipalDirVisible="False" cameraFrustumVisible="False" cameraFrustumProjVisible="False" cameraInfoVisible="False" sourceColorMapVisible="False" labelImageVisible="False" scenePointsVisible="False" userMaskVisible="False" depthClipPlanesVisible="False" xyzClipPlanesVisible="False" clipVolumeVisible="False" user1Color="66FF66FF" user2Color="66CCFFFF" user3Color="FF6600FF" user4Color="FFFF00FF" uiController1Color="66FF66FF" uiController2Color="66CCFFFF" uiController3Color="FF6600FF" uiController4Color="FFFF00FF" gridColor="999999FF" gridSize="4" gridSubdivisions="16" ciPalmPositionVisible="True" ciPalmNormalVisible="True" ciPointingDirVisible="True" ciFingerTipsVisible="True" ciCentroidsVisible="True" ciMeshVisible="True" ciGrabbersVisible="True" ciOpennessGaugeVisible="True" ciHandednessVisible="True" ciOpenStateVisible="True" hand1Color="66FF66FF" hand2Color="66CCFFFF">
+    <Camera>
+      <Position x="0.6" y="-0.8" z="0.6" />
+      <Orientation yaw="25" pitch="-25" />
+    </Camera>
+  </Visualization3D>
+</IisuInteractionDesignerProject>
