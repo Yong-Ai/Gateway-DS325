@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IisuInteractionDesignerProject Version="3.0.20">
+  <Graph id="{04ebb97e-686f-4e4f-9c9c-f31ee8c27319}">
+    <Node id="{2cad445e-91d9-4ca1-b9bc-c6b7a223e16e}" name="" type="iisu device">
+      <Output id="{65575074-5e85-4a11-9023-90ec8a9da58e}" name="CI.Enabled" />
+      <Output id="{d9735b45-7916-4bf1-aa49-22db92069ef8}" name="CI.HAND1.FingerTipPositions2D" />
+      <Output id="{78a677e8-ab70-4506-8cd3-c7f4c1ce7685}" name="CI.HAND1.PosingGestureId" />
+    </Node>
+    <Node id="{e967d51d-ca1b-46ee-9579-e303d3e9a48a}" name="" type="iisu skeleton" />
+    <Node id="{2dff6402-7ccf-4681-82a0-ece668f31155}" name="Script" type="lua script">
+      <Input id="{a53a08bf-f5ca-4f4e-9ec8-8ae0bfeb9142}" name="CI.Enabled" />
+      <Input id="{b8aa23a2-12af-436b-9636-64009bfcd2b1}" name="CI.HAND1.FingerTipPositions2D" />
+      <Output id="{8edfcb18-e7d6-4f5e-80e1-0cf010411059}" name="status" />
+      <Output id="{66499ff1-59c4-47fd-971d-4b61e13720be}" name="isflip" />
+      <CustomParameter id="{8edfcb18-e7d6-4f5e-80e1-0cf010411059}" />
+      <CustomParameter id="{66499ff1-59c4-47fd-971d-4b61e13720be}" />
+      <Content><![CDATA[function init()
+	status = "Not flipping off"
+	isflip = false
+end
+
+function main()
+
+local isGivingtheBird = false
+
+if CI_HAND1_FingerTipPositions2D[0].x == 0 and CI_HAND1_FingerTipPositions2D[0].y == 0 then
+	status = " Not flipping off"
+	isflip = false
+else
+	status = "Fliping off!!!"
+	isflip = true
+end
+
+end
+]]></Content>
+    </Node>
+    <Link source="{2cad445e-91d9-4ca1-b9bc-c6b7a223e16e}" sourceoutput="{65575074-5e85-4a11-9023-90ec8a9da58e}" destination="{2dff6402-7ccf-4681-82a0-ece668f31155}" destinationinput="{a53a08bf-f5ca-4f4e-9ec8-8ae0bfeb9142}" />
+    <Link source="{2cad445e-91d9-4ca1-b9bc-c6b7a223e16e}" sourceoutput="{d9735b45-7916-4bf1-aa49-22db92069ef8}" destination="{2dff6402-7ccf-4681-82a0-ece668f31155}" destinationinput="{b8aa23a2-12af-436b-9636-64009bfcd2b1}" />
+    <Node id="{e1ff885e-acf5-48a4-ab50-5b075b6f29ec}" name="Label 2" type="visualizer:label">
+      <Input id="{9242258b-d7d7-4f7b-af4e-10015ad5071c}" name="status" />
+    </Node>
+    <Link source="{2dff6402-7ccf-4681-82a0-ece668f31155}" sourceoutput="{8edfcb18-e7d6-4f5e-80e1-0cf010411059}" destination="{e1ff885e-acf5-48a4-ab50-5b075b6f29ec}" destinationinput="{9242258b-d7d7-4f7b-af4e-10015ad5071c}" />
+  </Graph>
+  <Movies />
+  <WindowLayout>
+    <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="0.25" DockTopPortion="0.25" DockBottomPortion="0.596078431372549" ActiveDocumentPane="1" ActivePane="-1">
+      <Contents Count="2">
+        <Content ID="0" PersistString="IID.FormDepth" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="1" PersistString="{e1ff885e-acf5-48a4-ab50-5b075b6f29ec}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      </Contents>
+      <Panes Count="2">
+        <Pane ID="0" DockState="DockBottom" ActiveContent="0">
+          <Contents Count="1">
+            <Content ID="0" RefID="0" />
+          </Contents>
+        </Pane>
+        <Pane ID="1" DockState="Document" ActiveContent="1">
+          <Contents Count="1">
+            <Content ID="0" RefID="1" />
+          </Contents>
+        </Pane>
+      </Panes>
+      <DockWindows>
+        <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+        <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="4">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="2" DockState="DockRight" ZOrderIndex="5">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="3" DockState="DockTop" ZOrderIndex="6">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="3">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+      </DockWindows>
+      <FloatWindows Count="0" />
+    </DockPanel>
+  </WindowLayout>
+  <Visualization3D userCentroidsVisible="False" userCentroidVelocitiesVisible="False" skeletonVisible="False" uiControllerVisible="False" uiPointerVisible="False" umActivationZonesVisible="False" umActivationZoneLabelsVisible="False" userBoundingBoxVisible="False" userLabelVisible="False" userPointsVisible="False" userMassCenterVisible="False" userHeightVisible="False" userBodyDirVisible="False" userPrincipalDirVisible="False" cameraFrustumVisible="False" cameraFrustumProjVisible="False" cameraInfoVisible="False" sourceColorMapVisible="False" labelImageVisible="False" scenePointsVisible="False" userMaskVisible="False" depthClipPlanesVisible="False" xyzClipPlanesVisible="False" clipVolumeVisible="False" user1Color="66FF66FF" user2Color="66CCFFFF" user3Color="FF6600FF" user4Color="FFFF00FF" uiController1Color="66FF66FF" uiController2Color="66CCFFFF" uiController3Color="FF6600FF" uiController4Color="FFFF00FF" gridColor="999999FF" gridSize="4" gridSubdivisions="16" ciPalmPositionVisible="True" ciPalmNormalVisible="True" ciPointingDirVisible="True" ciFingerTipsVisible="True" ciCentroidsVisible="True" ciMeshVisible="True" ciGrabbersVisible="True" ciOpennessGaugeVisible="True" ciHandednessVisible="True" ciOpenStateVisible="True" hand1Color="66FF66FF" hand2Color="66CCFFFF">
+    <Camera>
+      <Position x="0.6" y="-0.8" z="0.6" />
+      <Orientation yaw="25" pitch="-25" />
+    </Camera>
+  </Visualization3D>
+</IisuInteractionDesignerProject>
