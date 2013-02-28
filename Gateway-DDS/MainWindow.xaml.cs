@@ -33,15 +33,14 @@ namespace Gateway_DDS
         // validates iisu DataHandles
         private bool m_valid = false;
  
-        // are we bowing correctly?
-        private bool is_flip = false;
  
         // ensures we get a new frame
         private int m_lastFrameID = -1;
  
         // variables we're concerned with
-        private IDataHandle<bool> isflip;
         private IDataHandle<float> zoomStage;
+        private IDataHandle<bool> hand1_closed;
+        private IDataHandle<bool> hand2_closed;
 
 
         public MainWindow()
@@ -63,7 +62,7 @@ namespace Gateway_DDS
                 device.EventManager.RegisterEventListener("SYSTEM.Error", new OnErrorDelegate(onError));
 
                 // launch IID script
-                device.CommandManager.SendCommand("IID.loadGraph", "GateWay.iid");
+                device.CommandManager.SendCommand("IID.loadGraph", "gateway-v2.iid");
             }
             catch (Exception e)
             {
@@ -108,19 +107,9 @@ namespace Gateway_DDS
 
             // remember current frame id
             m_lastFrameID = currentFrameID;
+            //frameid.Text = currentFrameID.ToString();
 
             // update iisu data
-            //Console.WriteLine("left_hand_up: " + left_hand_up.Value + "     right_hand_up: " + right_hand_up.Value + "      is_bowing: " + is_bowing.Value);
-
-            /*
-            if (isflip.Value == true)
-            {
-                feedback.Text = "Flipping";
-            } else {
-                feedback.Text = "Not flipping";
-            }
-             * */
-
             feedback.Text = zoomStage.Value.ToString();
 
             device.ReleaseFrame();
@@ -139,7 +128,10 @@ namespace Gateway_DDS
             try
             {
                 zoomStage = device.RegisterDataHandle<float>("IID.Script.zoomStage");
-                m_valid =  zoomStage.Valid;
+                hand1_closed = device.RegisterDataHandle<bool>("IID.Script.hand1_closed");
+                hand2_closed = device.RegisterDataHandle<bool>("IID.Script.hand2_closed");
+                   
+                m_valid =  zoomStage.Valid && hand1_closed.Valid && hand2_closed.Valid;
             }
             catch (Exception e)
             {
