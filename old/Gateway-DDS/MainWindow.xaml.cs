@@ -42,6 +42,12 @@ namespace Gateway_DDS
         private IDataHandle<bool> hand1_closed;
         private IDataHandle<bool> hand2_closed;
 
+        private IDataHandle<float> h1x;
+        private IDataHandle<float> h1y;
+
+        private IDataHandle<float> h2x;
+        private IDataHandle<float> h2y;
+
 
         public MainWindow()
         {
@@ -167,9 +173,34 @@ namespace Gateway_DDS
             }
         }
 
+
+        void move_hand(int i, float x, float y)
+        {
+            if (i == 1)
+            {
+                hand1_normal.Margin = new Thickness(x, y, 0, 0);
+                hand1_grab.Margin = new Thickness(x, y, 0, 0);
+                hand1_point.Margin = new Thickness(x, y, 0, 0);
+            }
+            else
+            {
+                hand2_normal.Margin = new Thickness(x, y, 0, 0);
+                hand2_grab.Margin = new Thickness(x, y, 0, 0);
+                hand2_point.Margin = new Thickness(x, y, 0, 0);
+            }
+        }
+
         void update_hand_position()
         {
+            /*
+            float nh1x = 525 * h1x.Value;
+            float nh1y = 350 * h1y.Value;
+            move_hand(1, nh1x, nh1y);
 
+            float nh2x = 525 * h2x.Value;
+            float nh2y = 350 * h2y.Value;
+            move_hand(2, nh2x, nh2y);
+             */
         }
 
 
@@ -186,6 +217,11 @@ namespace Gateway_DDS
                 zoomStage = device.RegisterDataHandle<float>("IID.Script.zoomStage");
                 hand1_closed = device.RegisterDataHandle<bool>("IID.Script.hand1_closed");
                 hand2_closed = device.RegisterDataHandle<bool>("IID.Script.hand2_closed");
+
+                h1x = device.RegisterDataHandle<float>("IID.Script.h1x");
+                h1y = device.RegisterDataHandle<float>("IID.Script.h1y");
+                h2x = device.RegisterDataHandle<float>("IID.Script.h2x");
+                h2y = device.RegisterDataHandle<float>("IID.Script.h2y");
                    
                 m_valid =  zoomStage.Valid && hand1_closed.Valid && hand2_closed.Valid;
             }

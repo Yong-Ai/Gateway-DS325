@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <IisuInteractionDesignerProject Version="3.0.20">
-  <Graph id="{9897a7bf-027c-4e73-9eab-363ccabfef71}">
+  <Graph id="{07fa0ac9-98a2-4e36-b298-0f539d863d03}">
     <Node id="{c4efa12f-d0fc-4573-8172-1c7fc1f1a348}" name="Label 1" type="visualizer:label">
       <Input id="{c99b79d6-a7f4-4df7-8ceb-397ae5b83737}" name="zoomStage" />
     </Node>
@@ -10,14 +10,24 @@
       <Input id="{8787f482-4d86-4105-a2bd-c45ec0c026ca}" name="CI.HAND1.TipPosition2D" />
       <Input id="{00098fe5-e8af-4fe2-ba06-30212acb4ecf}" name="CI.HAND2.IsOpen" />
       <Input id="{1cd76e41-2a69-4f44-9635-c8a634db1495}" name="CI.HAND2.TipPosition2D" />
+      <Input id="{ed65dbe0-d50f-46bf-b2c5-87f56299617f}" name="CI.HAND2.PalmPosition2D" />
+      <Input id="{d5544772-ac85-46ee-88ed-011e4cddeece}" name="CI.HAND1.PalmPosition2D" />
       <Output id="{72e9d341-1dcb-41c0-a9bf-c6ef7a56399f}" name="hand1_closed" />
       <Output id="{e9c6e972-d184-44f7-9483-3a2c4665165d}" name="hand2_closed" />
       <Output id="{fa13fffe-ceae-4799-9494-5938cbd088fb}" name="zoomStage" />
       <Output id="{c13b4b02-20a7-4970-bce3-16cc4a6ff29b}" name="old_distance" />
       <Output id="{b4281a62-0772-414e-9166-bc5bb6addcd5}" name="thisDistance" />
+      <Output id="{4d8be463-87e1-4bde-a416-41492b535cd8}" name="h1x" />
+      <Output id="{297adb61-5f25-48cc-9e7e-256cab1869c8}" name="h1y" />
+      <Output id="{62dff138-ffdb-4487-b829-d92e51e49dc3}" name="h2x" />
+      <Output id="{36f9f472-9718-4c85-b809-d7b0e841e4c2}" name="h2y" />
       <CustomParameter id="{72e9d341-1dcb-41c0-a9bf-c6ef7a56399f}" />
       <CustomParameter id="{e9c6e972-d184-44f7-9483-3a2c4665165d}" />
       <CustomParameter id="{fa13fffe-ceae-4799-9494-5938cbd088fb}" />
+      <CustomParameter id="{4d8be463-87e1-4bde-a416-41492b535cd8}" />
+      <CustomParameter id="{297adb61-5f25-48cc-9e7e-256cab1869c8}" />
+      <CustomParameter id="{62dff138-ffdb-4487-b829-d92e51e49dc3}" />
+      <CustomParameter id="{36f9f472-9718-4c85-b809-d7b0e841e4c2}" />
       <Content><![CDATA[function init()
 	--Output Data
 	hand1_closed = false
@@ -28,6 +38,16 @@
 	zooming = false
 
 	zoomRatio = 0.2
+	
+	
+	h1x = 0
+	h1y = 0
+	h2x = 0
+	h2y = 0
+	
+	
+	maxX = 280
+	maxY = 130
 end
 
 
@@ -54,6 +74,10 @@ function crescendo(x,y)
 end
 
 
+function normalize(x,y)
+	return x/y
+end
+
 ------ Distance between tips
 function TipDistance()
 
@@ -70,8 +94,15 @@ end
 
 function main()
 
-hand1_closed = CI_HAND1_IsOpen
-hand2_closed = CI_HAND2_IsOpen
+-- Data for C#
+hand1_closed = not CI_HAND1_IsOpen
+hand2_closed = not CI_HAND2_IsOpen
+
+
+h1x = normalize(math.floor( CI_HAND1_PalmPosition2D.x ), maxX)
+h1y =  normalize(math.floor( CI_HAND1_PalmPosition2D.y ), maxY)
+h2x =  normalize(math.floor( CI_HAND2_PalmPosition2D.x ), maxX)
+h2y =  normalize(math.floor( CI_HAND2_PalmPosition2D.y ), maxY)
 
 if zooming == false then
 
@@ -97,11 +128,17 @@ if zooming == true then
 
 		if crescendo(thisDistance,old_distance) then
 				zoomStage = zoomStage - zoomRatio
+				if zoomStage == 0 then
+					zoomStage = zoomStage - zoomRatio
+				end
 				old_distance = thisDistance
 		end
 		
 		if descendo(thisDistance,old_distance) then
 				zoomStage = zoomStage + zoomRatio
+				if zoomStage == 0 then
+					zoomStage = zoomStage + zoomRatio
+				end
 				old_distance = thisDistance
 		end
 		
@@ -116,12 +153,16 @@ end
     <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{683016c2-77e0-4c92-8e27-4663772f5567}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{8787f482-4d86-4105-a2bd-c45ec0c026ca}" />
     <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{e5daa853-e972-4529-8dd9-59e989164afd}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{00098fe5-e8af-4fe2-ba06-30212acb4ecf}" />
     <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{4c2422d7-7fe5-4a78-9611-d6285c28ce8e}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{1cd76e41-2a69-4f44-9635-c8a634db1495}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{0137a4e5-914a-4c16-af1e-298daac1ce90}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{ed65dbe0-d50f-46bf-b2c5-87f56299617f}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{efb593a5-d5c1-4b84-a9e8-5319376c9fff}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{d5544772-ac85-46ee-88ed-011e4cddeece}" />
     <Node id="{aba4cf53-23cc-4f4c-8467-e0233160de6c}" name="" type="iisu skeleton" />
     <Node id="{1bbdcef6-73c2-4512-ab4f-96918f772422}" name="" type="iisu device">
       <Output id="{aa1945d9-8827-4fd5-bb20-a3fd617079a5}" name="CI.HAND1.IsOpen" />
       <Output id="{683016c2-77e0-4c92-8e27-4663772f5567}" name="CI.HAND1.TipPosition2D" />
       <Output id="{e5daa853-e972-4529-8dd9-59e989164afd}" name="CI.HAND2.IsOpen" />
       <Output id="{4c2422d7-7fe5-4a78-9611-d6285c28ce8e}" name="CI.HAND2.TipPosition2D" />
+      <Output id="{0137a4e5-914a-4c16-af1e-298daac1ce90}" name="CI.HAND2.PalmPosition2D" />
+      <Output id="{efb593a5-d5c1-4b84-a9e8-5319376c9fff}" name="CI.HAND1.PalmPosition2D" />
     </Node>
   </Graph>
   <Movies />
