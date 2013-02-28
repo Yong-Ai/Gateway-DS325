@@ -80,8 +80,12 @@ namespace Gateway_DDS
 
         }
 
+        int cnt = 0;
+        int ccnt = 0;
         protected void UpdateColor(object sender, EventArgs e)
         {
+            frameid.Text = "Frame count:" + cnt.ToString();
+                cnt++;
             update();
         }
 
@@ -92,22 +96,23 @@ namespace Gateway_DDS
             registerIIDData();
 
             // only update if object is active (all parameters are properly registered)
-            if (!m_valid)
-            {
-                return;
-            }
+            //if (!m_valid)
+            //{
+             //   return;
+            //}
 
             // the rest of the logic depends on iisu data, so we need to make sure that we have
             // already a new data frame
             int currentFrameID = device.FrameId;
-            if (currentFrameID == m_lastFrameID)
+            //if (currentFrameID == m_lastFrameID)
             {
-                return;
+              //  return;
             }
 
             // remember current frame id
             m_lastFrameID = currentFrameID;
-            //frameid.Text = currentFrameID.ToString();
+            cameraframe.Text = "Camera Frame: " + currentFrameID.ToString() + " of " + ccnt.ToString();
+            ccnt++;
 
             // update iisu data
             feedback.Text = zoomStage.Value.ToString();
@@ -135,7 +140,7 @@ namespace Gateway_DDS
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to register iisu data: " + e.Message);
+                error.Text = "Failed to register iisu data: " + e.Message;
             }
         }
 
