@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IisuInteractionDesignerProject Version="3.0.20">
+  <Graph id="{9897a7bf-027c-4e73-9eab-363ccabfef71}">
+    <Node id="{c4efa12f-d0fc-4573-8172-1c7fc1f1a348}" name="Label 1" type="visualizer:label">
+      <Input id="{c99b79d6-a7f4-4df7-8ceb-397ae5b83737}" name="zoomStage" />
+    </Node>
+    <Link source="{fa399725-2ae8-4d27-ab07-82624f77873c}" sourceoutput="{fa13fffe-ceae-4799-9494-5938cbd088fb}" destination="{c4efa12f-d0fc-4573-8172-1c7fc1f1a348}" destinationinput="{c99b79d6-a7f4-4df7-8ceb-397ae5b83737}" />
+    <Node id="{fa399725-2ae8-4d27-ab07-82624f77873c}" name="Script" type="lua script">
+      <Input id="{076fd3d1-d8fa-4213-8979-5d86c2b868a7}" name="CI.HAND1.IsOpen" />
+      <Input id="{8787f482-4d86-4105-a2bd-c45ec0c026ca}" name="CI.HAND1.TipPosition2D" />
+      <Input id="{00098fe5-e8af-4fe2-ba06-30212acb4ecf}" name="CI.HAND2.IsOpen" />
+      <Input id="{1cd76e41-2a69-4f44-9635-c8a634db1495}" name="CI.HAND2.TipPosition2D" />
+      <Output id="{72e9d341-1dcb-41c0-a9bf-c6ef7a56399f}" name="hand1_closed" />
+      <Output id="{e9c6e972-d184-44f7-9483-3a2c4665165d}" name="hand2_closed" />
+      <Output id="{fa13fffe-ceae-4799-9494-5938cbd088fb}" name="zoomStage" />
+      <Output id="{c13b4b02-20a7-4970-bce3-16cc4a6ff29b}" name="old_distance" />
+      <Output id="{b4281a62-0772-414e-9166-bc5bb6addcd5}" name="thisDistance" />
+      <CustomParameter id="{72e9d341-1dcb-41c0-a9bf-c6ef7a56399f}" />
+      <CustomParameter id="{e9c6e972-d184-44f7-9483-3a2c4665165d}" />
+      <CustomParameter id="{fa13fffe-ceae-4799-9494-5938cbd088fb}" />
+      <Content><![CDATA[function init()
+	--Output Data
+	hand1_closed = false
+	hand2_closed = false
+	zoomStage = 0
+
+	old_distance = -1
+	zooming = false
+
+	zoomRatio = 0.2
+end
+
+
+------- DESCENDO--------
+function descendo(x,y)
+	local threshold_desc = 10
+
+	if x > y+threshold_desc then
+		return true
+	else
+		return false
+	end
+end
+
+------- DESCENDO--------
+function crescendo(x,y)
+	local threshold_desc = 10
+
+	if x+threshold_desc < y then
+		return true
+	else
+		return false
+	end
+end
+
+
+------ Distance between tips
+function TipDistance()
+
+	xa = CI_HAND1_TipPosition2D.x
+	ya = CI_HAND1_TipPosition2D.y
+	xb = CI_HAND2_TipPosition2D.x
+	yb = CI_HAND2_TipPosition2D.y
+
+	distance = math.sqrt( math.pow((xa-xb),2) + math.pow((ya-yb),2))
+	
+	return math.floor(distance)
+end
+
+
+function main()
+
+hand1_closed = CI_HAND1_IsOpen
+hand2_closed = CI_HAND2_IsOpen
+
+if zooming == false then
+
+	if CI_HAND1_IsOpen == false and CI_HAND2_IsOpen == false then
+		
+		zooming = true
+		zoomStage = 0
+		old_distance = TipDistance()
+	
+	end
+	
+end
+
+
+if zooming == true then
+
+	if CI_HAND1_IsOpen == true and CI_HAND2_IsOpen == true then
+		zooming = false
+		zoomStage = 0
+	else
+
+		thisDistance = TipDistance()
+
+		if crescendo(thisDistance,old_distance) then
+				zoomStage = zoomStage - zoomRatio
+				old_distance = thisDistance
+		end
+		
+		if descendo(thisDistance,old_distance) then
+				zoomStage = zoomStage + zoomRatio
+				old_distance = thisDistance
+		end
+		
+	end
+	
+end
+
+end
+]]></Content>
+    </Node>
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{aa1945d9-8827-4fd5-bb20-a3fd617079a5}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{076fd3d1-d8fa-4213-8979-5d86c2b868a7}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{683016c2-77e0-4c92-8e27-4663772f5567}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{8787f482-4d86-4105-a2bd-c45ec0c026ca}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{e5daa853-e972-4529-8dd9-59e989164afd}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{00098fe5-e8af-4fe2-ba06-30212acb4ecf}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{4c2422d7-7fe5-4a78-9611-d6285c28ce8e}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{1cd76e41-2a69-4f44-9635-c8a634db1495}" />
+    <Node id="{aba4cf53-23cc-4f4c-8467-e0233160de6c}" name="" type="iisu skeleton" />
+    <Node id="{1bbdcef6-73c2-4512-ab4f-96918f772422}" name="" type="iisu device">
+      <Output id="{aa1945d9-8827-4fd5-bb20-a3fd617079a5}" name="CI.HAND1.IsOpen" />
+      <Output id="{683016c2-77e0-4c92-8e27-4663772f5567}" name="CI.HAND1.TipPosition2D" />
+      <Output id="{e5daa853-e972-4529-8dd9-59e989164afd}" name="CI.HAND2.IsOpen" />
+      <Output id="{4c2422d7-7fe5-4a78-9611-d6285c28ce8e}" name="CI.HAND2.TipPosition2D" />
+    </Node>
+  </Graph>
+  <Movies />
+  <WindowLayout>
+    <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="0.25" DockTopPortion="0.25" DockBottomPortion="0.596078431372549" ActiveDocumentPane="1" ActivePane="-1">
+      <Contents Count="2">
+        <Content ID="0" PersistString="IID.FormDepth" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="1" PersistString="{c4efa12f-d0fc-4573-8172-1c7fc1f1a348}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      </Contents>
+      <Panes Count="2">
+        <Pane ID="0" DockState="DockBottom" ActiveContent="0">
+          <Contents Count="1">
+            <Content ID="0" RefID="0" />
+          </Contents>
+        </Pane>
+        <Pane ID="1" DockState="Document" ActiveContent="1">
+          <Contents Count="1">
+            <Content ID="0" RefID="1" />
+          </Contents>
+        </Pane>
+      </Panes>
+      <DockWindows>
+        <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+        <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="3">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="2" DockState="DockRight" ZOrderIndex="4">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="3" DockState="DockTop" ZOrderIndex="5">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="2">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+      </DockWindows>
+      <FloatWindows Count="0" />
+    </DockPanel>
+  </WindowLayout>
+  <Visualization3D userCentroidsVisible="False" userCentroidVelocitiesVisible="False" skeletonVisible="False" uiControllerVisible="False" uiPointerVisible="False" umActivationZonesVisible="False" umActivationZoneLabelsVisible="False" userBoundingBoxVisible="False" userLabelVisible="False" userPointsVisible="False" userMassCenterVisible="False" userHeightVisible="False" userBodyDirVisible="False" userPrincipalDirVisible="False" cameraFrustumVisible="False" cameraFrustumProjVisible="False" cameraInfoVisible="False" sourceColorMapVisible="False" labelImageVisible="False" scenePointsVisible="False" userMaskVisible="False" depthClipPlanesVisible="False" xyzClipPlanesVisible="False" clipVolumeVisible="False" user1Color="66FF66FF" user2Color="66CCFFFF" user3Color="FF6600FF" user4Color="FFFF00FF" uiController1Color="66FF66FF" uiController2Color="66CCFFFF" uiController3Color="FF6600FF" uiController4Color="FFFF00FF" gridColor="999999FF" gridSize="4" gridSubdivisions="16" ciPalmPositionVisible="True" ciPalmNormalVisible="True" ciPointingDirVisible="True" ciFingerTipsVisible="True" ciCentroidsVisible="True" ciMeshVisible="True" ciGrabbersVisible="True" ciOpennessGaugeVisible="True" ciHandednessVisible="True" ciOpenStateVisible="True" hand1Color="66FF66FF" hand2Color="66CCFFFF">
+    <Camera>
+      <Position x="0.6" y="-0.8" z="0.6" />
+      <Orientation yaw="25" pitch="-25" />
+    </Camera>
+  </Visualization3D>
+</IisuInteractionDesignerProject>
