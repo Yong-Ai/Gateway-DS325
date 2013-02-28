@@ -2,11 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-        Title="MainWindow" Height="1920" Width="1080" >
-    <Grid Background="{x:Null}">
+        Title="Gateway DDS" Height="1920" Width="1080" Loaded="Window_Loaded_1" >
+
+    <Canvas>
+        <Grid Background="{x:Null}">
         
         <Image Height="1920" HorizontalAlignment="Left" Margin="0,0,0,0" Name="background" Stretch="UniformToFill" VerticalAlignment="Top" Width="1080" Source="/Gateway;component/Images/background.jpg" />
-        <TextBlock Text="Drag Icons here to access content" Margin="0,370,0,0" FontSize="50" HorizontalAlignment="Center" />
+        <TextBlock Text="Drag Icons here to access content" Margin="143,370,1112,0" FontSize="50" HorizontalAlignment="Center" />
         <m:Map x:Name="myMap" CredentialsProvider="Ak4hNCoixJgvQuHZM66im9rfhq4zmx_Ksllh9BrlJKre-avQkFas0E303BPdyoKi"  Width="900" Height="900" DataContext="{Binding}" Background="White" BorderThickness="0" ZoomLevel="5" Margin ="1100,500,0,0 " HorizontalAlignment="Left" VerticalAlignment="Top" ViewChangeOnFrame="MyMap_ViewChangeOnFrame" MouseLeftButtonDown="myMap_MouseLeftButtonDown">
             <m:Map.Center>
                 <m:Location/>
@@ -16,8 +18,8 @@
         <Image Height="200" HorizontalAlignment="Left" Margin="56,88,0,0" Name="mapsButton" Stretch="Fill" VerticalAlignment="Top" Width="200" Source="/Gateway;component/Images/mapsBtn.png" MouseLeftButtonDown="rect_LeftMouseButtonDown" Tag="Map" />
         <Image Height="200" HorizontalAlignment="Left" Margin="312,88,0,0" Name="museumButton" Stretch="Fill" VerticalAlignment="Top" Width="200" Source="/Gateway;component/Images/museumBtn.png" MouseLeftButtonDown="rect_LeftMouseButtonDown" Tag="Museum" />
         <Image Height="200" HorizontalAlignment="Left" Margin="568,88,0,0" Name="restaurantButton" Stretch="Uniform" VerticalAlignment="Top" Width="200" Source="/Gateway;component/Images/restaurantBtn1.png" MouseLeftButtonDown="rect_LeftMouseButtonDown"  Tag="Restaurant"/>
-        <Image Height="200" HorizontalAlignment="Left" Margin="824,88,0,0" Stretch="Fill" VerticalAlignment="Top" Width="200" Name="Stadium" Source="/WpfApplication1;component/Images/stadiumBtn.png"  MouseLeftButtonDown="rect_LeftMouseButtonDown" Tag="Stadium"/>
-        <Image Height="900" HorizontalAlignment="Left" Margin="1100,500,0,0" Name="mapImg" Stretch="Fill" VerticalAlignment="Top" Width="900" Source="/WpfApplication1;component/Images/mapImg.jpg" />
+        <Image Height="200" HorizontalAlignment="Left" Margin="824,88,0,0" Stretch="Fill" VerticalAlignment="Top" Width="200" Name="Stadium" Source="/Gateway;component/Images/stadiumBtn.png"  MouseLeftButtonDown="rect_LeftMouseButtonDown" Tag="Stadium"/>
+        <Image Height="900" HorizontalAlignment="Left" Margin="1100,500,0,0" Name="mapImg" Stretch="Fill" VerticalAlignment="Top" Width="900" Source="/Gateway;component/Images/mapImg.jpg" />
         <Image Height="900" HorizontalAlignment="Left" Margin="1100,500,0,0" Name="museumImg" Stretch="Fill" VerticalAlignment="Top" Width="900" Source="/Gateway;component/Images/egeskov.PNG" />
         <Image Height="900" HorizontalAlignment="Left" Margin="1100,500,0,0" Name="stadiumImg" Stretch="Fill" VerticalAlignment="Top" Width="900" Source="/Gateway;component/Images/parken.png" />
         <Rectangle Height="900" HorizontalAlignment="Left" Margin="90,300,0,0" Name="Target" Stroke="Black" VerticalAlignment="Top" Width="900" Drop="Target_Drop" Fill="#FFB13D3D" Opacity="0" AllowDrop="True" />
@@ -26,4 +28,5 @@
         <Button Content="Minus" Height="23" HorizontalAlignment="Left" Margin="200,304,0,0" Name="Minus" VerticalAlignment="Top" Width="75" Click="Minus_Click" />
         
     </Grid>
+        </Canvas>
 </Window>
