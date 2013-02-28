@@ -117,8 +117,59 @@ namespace Gateway_DDS
             // update iisu data
             feedback.Text = zoomStage.Value.ToString();
 
+            update_hand_icon();
+            update_hand_position();
+
+
             device.ReleaseFrame();
             device.UpdateFrame(true);
+        }
+
+
+        void update_hand_icon()
+        {
+            if (hand1_closed.Value == false)
+            {
+                hand1_normal.Opacity = 0;
+                hand1_point.Opacity = 0;
+                hand1_grab.Opacity = 1;
+            }
+            else
+            {
+                hand1_normal.Opacity = 1;
+                hand1_point.Opacity = 0;
+                hand1_grab.Opacity = 0;
+            }
+
+            if (hand2_closed.Value == false)
+            {
+                hand2_normal.Opacity = 0;
+                hand2_point.Opacity = 0;
+                hand2_grab.Opacity = 1;
+            }
+            else
+            {
+                hand2_normal.Opacity = 1;
+                hand2_point.Opacity = 0;
+                hand2_grab.Opacity = 0;
+            }
+
+
+            if (hand2_closed.Value == false && hand1_closed.Value == false)
+            {
+                hand2_normal.Opacity = 0;
+                hand2_point.Opacity = 1;
+                hand2_grab.Opacity = 0;
+
+                hand1_normal.Opacity = 0;
+                hand1_point.Opacity = 1;
+                hand1_grab.Opacity = 0;
+            }
+        }
+
+        void update_hand_position()
+        {
+
         }
 
 

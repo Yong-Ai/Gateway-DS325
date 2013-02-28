@@ -7,5 +7,14 @@
         <TextBlock x:Name="frameid" HorizontalAlignment="Left" Margin="230,205,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
         <TextBlock x:Name="cameraframe" HorizontalAlignment="Left" Margin="230,254,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
         <TextBlock x:Name="error" HorizontalAlignment="Left" Margin="230,293,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+
+        <Image x:Name="hand1_normal" Source="palm.png" Margin="54,90,378,168" />
+        <Image x:Name="hand2_normal" Source="palm.png" Margin="378,90,54,168" />
+
+        <Image x:Name="hand1_point" Source="zoom.png" Margin="54,90,378,168" Opacity="0"/>
+        <Image x:Name="hand2_point" Source="zoom.png" Margin="378,90,54,168" Opacity="0" />
+
+        <Image x:Name="hand1_grab" Source="grab.png" Margin="54,90,378,168" Opacity="0"/>
+        <Image x:Name="hand2_grab" Source="grab.png" Margin="378,90,54,168" Opacity="0" />
     </Grid>
 </Window>
