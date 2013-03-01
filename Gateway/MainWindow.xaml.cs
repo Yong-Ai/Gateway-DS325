@@ -371,121 +371,129 @@ namespace WpfApplication1
                             var scaledJointLeft = skeleton.Joints[JointType.HandLeft].ScaleTo(1080, 540, .5f, .5f);
                             var scaledJointRight = skeleton.Joints[JointType.HandRight].ScaleTo(1080, 540, .5f, .5f);
 
-
-                            SetEllipsePosition(leftEllipse, scaledJointLeft);
-                            SetEllipsePosition(rightEllipse, scaledJointRight);
-
-                            txtblock.Text = "x: " + scaledJointRight.Position.X + "  y: " + scaledJointLeft.Position.Y;
+                            if (skeleton.Joints[JointType.HandLeft].TrackingState == JointTrackingState.Tracked &&
+                                skeleton.Joints[JointType.HandRight].TrackingState == JointTrackingState.Tracked)
+                            {
 
 
-                            // Y e bun la stanga
-                            if (scaledJointLeft.Position.Y > 80 && scaledJointLeft.Position.Y < 200) {
+                                SetEllipsePosition(leftEllipse, scaledJointLeft);
+                                SetEllipsePosition(rightEllipse, scaledJointRight);
 
-                                if (scaledJointLeft.Position.X > 30 && scaledJointLeft.Position.X < 190)
+                                //txtblock.Text = "x: " + scaledJointRight.Position.X + "  y: " + scaledJointRight.Position.Y +
+                                // "x2: " + scaledJointLeft.Position.X + "  y2: " + scaledJointLeft.Position.Y;
+
+
+                                // Y e bun la stanga
+                                if (scaledJointLeft.Position.Y > 80 && scaledJointLeft.Position.Y < 200 ||
+                                    scaledJointRight.Position.Y > 80 && scaledJointRight.Position.Y < 200)
                                 {
-                                    if (overmaps)
+
+                                    if (scaledJointLeft.Position.X > 30 && scaledJointLeft.Position.X < 190)
                                     {
-                                        if (frame.Timestamp - firstframe > 3000)
+                                        if (overmaps)
                                         {
-                                            displayMaps();
+                                            if (frame.Timestamp - firstframe > 1000)
+                                            {
+                                                displayMaps();
+                                            }
                                         }
+                                        else
+                                        {
+                                            overmaps = true;
+                                            firstframe = frame.Timestamp;
+                                        }
+
+
+                                        //txtblock.Text = frame.Timestamp.ToString();
+
                                     }
                                     else
                                     {
-                                        overmaps = true;
-                                        firstframe = frame.Timestamp;
+                                        overmaps = false;
                                     }
 
 
-                                    //txtblock.Text = frame.Timestamp.ToString();
-
-                                }
-                                else
-                                {
-                                    overmaps = false;
-                                }
-
-
-                                if ( scaledJointLeft.Position.X > 280 && scaledJointLeft.Position.X < 340 ||
-                                     scaledJointRight.Position.X > 280 && scaledJointRight.Position.X < 340 )
-                                {
-                                    if (overmuseum)
+                                    if (scaledJointLeft.Position.X > 280 && scaledJointLeft.Position.X < 340)
                                     {
-                                        if (frame.Timestamp - firstframe > 3000)
+                                        if (overmuseum)
                                         {
-                                            displayMuseum();
+                                            if (frame.Timestamp - firstframe > 1000)
+                                            {
+                                                displayMuseum();
+                                            }
                                         }
+                                        else
+                                        {
+                                            overmuseum = true;
+                                            firstframe = frame.Timestamp;
+                                        }
+
+
+                                        //txtblock.Text = frame.Timestamp.ToString();
+
                                     }
                                     else
                                     {
-                                        overmuseum = true;
-                                        firstframe = frame.Timestamp;
+                                        overmuseum = false;
                                     }
 
 
-                                    //txtblock.Text = frame.Timestamp.ToString();
-
-                                }
-                                else
-                                {
-                                    overmuseum = false;
-                                }
-
-
-                                if (scaledJointRight.Position.X > 510 && scaledJointRight.Position.X < 700)
-                                {
-                                    if (overfood)
+                                    if (scaledJointRight.Position.X > 570 && scaledJointRight.Position.X < 720)
                                     {
-                                        if (frame.Timestamp - firstframe > 3000)
+                                        if (overfood)
                                         {
-                                            displayEat();
+                                            if (frame.Timestamp - firstframe > 1000)
+                                            {
+                                                displayEat();
+                                            }
                                         }
+                                        else
+                                        {
+                                            overfood = true;
+                                            firstframe = frame.Timestamp;
+                                        }
+
+
+                                        //txtblock.Text = frame.Timestamp.ToString();
+
                                     }
                                     else
                                     {
-                                        overfood = true;
-                                        firstframe = frame.Timestamp;
+                                        overfood = false;
                                     }
 
-
-                                    //txtblock.Text = frame.Timestamp.ToString();
-
-                                }
-                                else
-                                {
-                                    overfood = false;
-                                }
-
-                                if (scaledJointRight.Position.X > 810 && scaledJointRight.Position.X < 950)
-                                {
-                                    if (overstadium)
+                                    if (scaledJointRight.Position.X > 810 && scaledJointRight.Position.X < 950)
                                     {
-                                        if (frame.Timestamp - firstframe > 3000)
+                                        if (overstadium)
                                         {
-                                            displayStadion();
+                                            if (frame.Timestamp - firstframe > 1000)
+                                            {
+                                                displayStadion();
+                                            }
                                         }
+                                        else
+                                        {
+                                            overstadium = true;
+                                            firstframe = frame.Timestamp;
+                                        }
+
+
+                                        //txtblock.Text = frame.Timestamp.ToString();
+
                                     }
                                     else
                                     {
-                                        overstadium = true;
-                                        firstframe = frame.Timestamp;
+                                        overstadium = false;
                                     }
 
 
-                                    //txtblock.Text = frame.Timestamp.ToString();
-
-                                }
-                                else
-                                {
-                                    overstadium = false;
                                 }
 
+                                //mapsButton.
 
                             }
-
-                            //mapsButton.
-
                         }
+
                     }
 
                 }
@@ -583,8 +591,10 @@ namespace WpfApplication1
             
                 try
                 {
+
                     this.Sensor = KinectSensor.KinectSensors[0];
                     this.Sensor.Start();
+
 
                 }
                 catch (IOException ex)
@@ -603,11 +613,23 @@ namespace WpfApplication1
 
             if (this.Sensor != null)
             {
+
+                TransformSmoothParameters smoothingParam = new TransformSmoothParameters();
+                {
+                    smoothingParam.Smoothing = 0.5f;
+                    smoothingParam.Correction = 0.5f;
+                    smoothingParam.Prediction = 0.5f;
+                    smoothingParam.JitterRadius = 0.05f;
+                    smoothingParam.MaxDeviationRadius = 0.04f;
+                };
+
                 //set to near mode
                 this.Sensor.SkeletonStream.EnableTrackingInNearRange = true;
                 this.Sensor.DepthStream.Range = DepthRange.Near; // Depth in near range enabled
                 this.Sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-                this.Sensor.SkeletonStream.Enable();
+                this.Sensor.SkeletonStream.Enable(smoothingParam);
+
+
 
                 this.Sensor.SkeletonFrameReady += this.OnSkeletonFrameReady;
 
