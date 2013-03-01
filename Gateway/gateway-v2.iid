@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <IisuInteractionDesignerProject Version="3.0.20">
-  <Graph id="{07fa0ac9-98a2-4e36-b298-0f539d863d03}">
+  <Graph id="{0616527e-b7bf-44d6-8d82-2f538b68c13b}">
     <Node id="{c4efa12f-d0fc-4573-8172-1c7fc1f1a348}" name="Label 1" type="visualizer:label">
       <Input id="{c99b79d6-a7f4-4df7-8ceb-397ae5b83737}" name="zoomStage" />
     </Node>
@@ -12,6 +12,11 @@
       <Input id="{1cd76e41-2a69-4f44-9635-c8a634db1495}" name="CI.HAND2.TipPosition2D" />
       <Input id="{ed65dbe0-d50f-46bf-b2c5-87f56299617f}" name="CI.HAND2.PalmPosition2D" />
       <Input id="{d5544772-ac85-46ee-88ed-011e4cddeece}" name="CI.HAND1.PalmPosition2D" />
+      <Input id="{2c190051-9de3-4e26-beb7-81df063eefff}" name="CI.HAND1.Status" />
+      <Input id="{f8d7e707-6f9c-44d7-b0fa-74f2707975a9}" name="CI.HAND1.PalmPosition3D" />
+      <Input id="{e63e6d61-1568-4e80-ac12-071960ae32fa}" name="CI.HAND2.PalmPosition3D" />
+      <Input id="{360accc4-11a9-4024-ad3f-ec723cf692a5}" name="CI.HAND2.CENTROIDS.Positions" />
+      <Input id="{e012aaba-e927-4d51-911d-6a91929e36de}" name="CI.HAND2.CENTROIDS.JumpStatus" />
       <Output id="{72e9d341-1dcb-41c0-a9bf-c6ef7a56399f}" name="hand1_closed" />
       <Output id="{e9c6e972-d184-44f7-9483-3a2c4665165d}" name="hand2_closed" />
       <Output id="{fa13fffe-ceae-4799-9494-5938cbd088fb}" name="zoomStage" />
@@ -21,6 +26,8 @@
       <Output id="{297adb61-5f25-48cc-9e7e-256cab1869c8}" name="h1y" />
       <Output id="{62dff138-ffdb-4487-b829-d92e51e49dc3}" name="h2x" />
       <Output id="{36f9f472-9718-4c85-b809-d7b0e841e4c2}" name="h2y" />
+      <Output id="{38465182-ee3c-49ed-b236-c96754c79959}" name="px1" />
+      <Output id="{27337429-0e28-41d5-8bb2-a6856728f848}" name="py1" />
       <CustomParameter id="{72e9d341-1dcb-41c0-a9bf-c6ef7a56399f}" />
       <CustomParameter id="{e9c6e972-d184-44f7-9483-3a2c4665165d}" />
       <CustomParameter id="{fa13fffe-ceae-4799-9494-5938cbd088fb}" />
@@ -104,6 +111,12 @@ h1y =  normalize(math.floor( CI_HAND1_PalmPosition2D.y ), maxY)
 h2x =  normalize(math.floor( CI_HAND2_PalmPosition2D.x ), maxX)
 h2y =  normalize(math.floor( CI_HAND2_PalmPosition2D.y ), maxY)
 
+px1 = CI_HAND1_PalmPosition3D.x / CI_HAND1_PalmPosition3D.z
+py1 = CI_HAND1_PalmPosition3D.y / CI_HAND1_PalmPosition3D.z
+
+px2 = CI_HAND2_PalmPosition3D.x / CI_HAND2_PalmPosition3D.z
+py2 = CI_HAND2_PalmPosition3D.y / CI_HAND2_PalmPosition3D.z
+
 if zooming == false then
 
 	if CI_HAND1_IsOpen == false and CI_HAND2_IsOpen == false then
@@ -155,6 +168,11 @@ end
     <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{4c2422d7-7fe5-4a78-9611-d6285c28ce8e}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{1cd76e41-2a69-4f44-9635-c8a634db1495}" />
     <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{0137a4e5-914a-4c16-af1e-298daac1ce90}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{ed65dbe0-d50f-46bf-b2c5-87f56299617f}" />
     <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{efb593a5-d5c1-4b84-a9e8-5319376c9fff}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{d5544772-ac85-46ee-88ed-011e4cddeece}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{676e5243-71a5-4524-8737-55947f86b85b}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{2c190051-9de3-4e26-beb7-81df063eefff}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{df741060-41ce-400c-b22c-b59998f725ce}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{f8d7e707-6f9c-44d7-b0fa-74f2707975a9}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{ecf954ab-aa5b-4398-859e-78d60be44971}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{e63e6d61-1568-4e80-ac12-071960ae32fa}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{ff3a6f22-de2e-4b74-8d5a-7d988b3127e4}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{360accc4-11a9-4024-ad3f-ec723cf692a5}" />
+    <Link source="{1bbdcef6-73c2-4512-ab4f-96918f772422}" sourceoutput="{b67e4953-f140-4ff0-9bd5-70e31970fdea}" destination="{fa399725-2ae8-4d27-ab07-82624f77873c}" destinationinput="{e012aaba-e927-4d51-911d-6a91929e36de}" />
     <Node id="{aba4cf53-23cc-4f4c-8467-e0233160de6c}" name="" type="iisu skeleton" />
     <Node id="{1bbdcef6-73c2-4512-ab4f-96918f772422}" name="" type="iisu device">
       <Output id="{aa1945d9-8827-4fd5-bb20-a3fd617079a5}" name="CI.HAND1.IsOpen" />
@@ -163,6 +181,11 @@ end
       <Output id="{4c2422d7-7fe5-4a78-9611-d6285c28ce8e}" name="CI.HAND2.TipPosition2D" />
       <Output id="{0137a4e5-914a-4c16-af1e-298daac1ce90}" name="CI.HAND2.PalmPosition2D" />
       <Output id="{efb593a5-d5c1-4b84-a9e8-5319376c9fff}" name="CI.HAND1.PalmPosition2D" />
+      <Output id="{676e5243-71a5-4524-8737-55947f86b85b}" name="CI.HAND1.Status" />
+      <Output id="{df741060-41ce-400c-b22c-b59998f725ce}" name="CI.HAND1.PalmPosition3D" />
+      <Output id="{ecf954ab-aa5b-4398-859e-78d60be44971}" name="CI.HAND2.PalmPosition3D" />
+      <Output id="{ff3a6f22-de2e-4b74-8d5a-7d988b3127e4}" name="CI.HAND2.CENTROIDS.Positions" />
+      <Output id="{b67e4953-f140-4ff0-9bd5-70e31970fdea}" name="CI.HAND2.CENTROIDS.JumpStatus" />
     </Node>
   </Graph>
   <Movies />

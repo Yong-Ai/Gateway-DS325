@@ -14,10 +14,10 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using Microsoft.Maps.MapControl.WPF;
 
-/*
+
 using Iisu;
 using Iisu.Data;
-*/
+
 
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
@@ -31,7 +31,7 @@ namespace WpfApplication1
     /// </summary>
     public partial class MainWindow : Window
     {
-        /*
+        
         // iisu handle
         private IHandle iisuHandle;
 
@@ -55,7 +55,7 @@ namespace WpfApplication1
 
         private IDataHandle<float> h2x;
         private IDataHandle<float> h2y;
-        */
+        
         private KinectSensor Sensor;
 
         /// <summary>
@@ -96,8 +96,61 @@ namespace WpfApplication1
         public MainWindow()
         {
             InitializeComponent();
+
+            initDS();
+            CompositionTarget.Rendering += UpdateColor;
             myMap.Mode = new RoadMode();
+            stadiumImg.Margin = new Thickness(1100d, stadiumImg.Margin.Top, stadiumImg.Margin.Right, stadiumImg.Margin.Bottom);
+            museumImg.Margin = new Thickness(1100d, museumImg.Margin.Top, museumImg.Margin.Right, museumImg.Margin.Bottom);
+            myMap.Margin = new Thickness(90d, mapImg.Margin.Top, mapImg.Margin.Right, mapImg.Margin.Bottom);
+            browser.Margin = new Thickness(1100d, browser.Margin.Top, browser.Margin.Right, browser.Margin.Bottom);
+            myMap.Center = new Location(55.396172, 10.39079);
+            myMap.ZoomLevel = 10.0;
         }
+
+
+        protected void UpdateColor(object sender, EventArgs e)
+        {
+            updateDS();
+        }
+
+        void initDS()
+        {
+            IContext context = Iisu.Iisu.Context;
+
+            // get iisu handle
+            iisuHandle = context.CreateHandle();
+
+            // create iisu device
+            device = iisuHandle.InitializeDevice();
+
+            try
+            {
+                // register event listener
+                device.EventManager.RegisterEventListener("SYSTEM.Error", new OnErrorDelegate(onError));
+
+                // launch IID script
+                device.CommandManager.SendCommand("IID.loadGraph", "gateway-v2.iid");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Environment.Exit(0);
+            }
+
+            device.Start();
+
+        }
+
+
+
+        private delegate void OnErrorDelegate(String name, Iisu.Error e);
+        private void onError(String name, Iisu.Error e)
+        {
+            Console.WriteLine("OH NO!" + e.Message);
+        }
+
+
 
         private void restaurant_Click(object sender, RoutedEventArgs e)  //click version
         {
@@ -183,6 +236,20 @@ namespace WpfApplication1
             myMap.ZoomLevel = myMap.ZoomLevel - 0.1f;
         }
 
+
+
+        void overzoom(float ratio)
+        {
+
+            if (ratio < 9 && ratio > -9)
+            {
+
+                //myMap.ZoomLevel = 3 + ratio ;
+                myMap.ZoomLevel  =+ 3 + ratio;
+            }
+        }
+
+
         void MyMap_ViewChangeOnFrame(object sender, MapEventArgs e)
         {
             //Gets the map that raised this event
@@ -253,21 +320,87 @@ namespace WpfApplication1
                     foreach (var skeleton in this.skeletons)
                     {
                         // Only consider tracked skeletons.
-                        if (skeleton.TrackingState == SkeletonTrackingState.Tracked &&
-                            skeleton.TrackingId == this.nearestId)
+                        if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             var scaledJointLeft = skeleton.Joints[JointType.HandLeft].ScaleTo(900, 540, .8f, .8f);
                             var scaledJointRight = skeleton.Joints[JointType.HandRight].ScaleTo(900, 540, .8f, .8f);
 
 
-                            //SetEllipsePosition(leftEllipse, scaledJointLeft);
-                            //SetEllipsePosition(rightEllipse, scaledJointRight);
+                            SetEllipsePosition(leftEllipse, scaledJointLeft);
+                            SetEllipsePosition(rightEllipse, scaledJointRight);
                         }
                     }
 
                 }
             }
+
+
+            //updateDS();
+
         }
+
+
+        void updateDS()
+        {
+            // make sure that iid parameters are registered
+            registerIIDData();
+
+            // only update if object is active (all parameters are properly registered)
+            //if (!m_valid)
+            //{
+            //   return;
+            //}
+
+            // the rest of the logic depends on iisu data, so we need to make sure that we have
+            // already a new data frame
+            int currentFrameID = device.FrameId;
+            //if (currentFrameID == m_lastFrameID)
+            {
+                //  return;
+            }
+
+            // remember current frame id
+            m_lastFrameID = currentFrameID;
+
+
+            if (zoomStage.Value != 0)
+            {
+                overzoom(zoomStage.Value);
+            }
+
+            txtblock.Text = zoomStage.Value.ToString();
+
+            device.ReleaseFrame();
+            device.UpdateFrame(true);
+        }
+
+
+        private void registerIIDData()
+        {
+            if (m_valid)
+            {
+                return;
+            }
+
+            try
+            {
+                zoomStage = device.RegisterDataHandle<float>("IID.Script.zoomStage");
+                hand1_closed = device.RegisterDataHandle<bool>("IID.Script.hand1_closed");
+                hand2_closed = device.RegisterDataHandle<bool>("IID.Script.hand2_closed");
+
+                h1x = device.RegisterDataHandle<float>("IID.Script.h1x");
+                h1y = device.RegisterDataHandle<float>("IID.Script.h1y");
+                h2x = device.RegisterDataHandle<float>("IID.Script.h2x");
+                h2y = device.RegisterDataHandle<float>("IID.Script.h2y");
+
+                m_valid = zoomStage.Valid && hand1_closed.Valid && hand2_closed.Valid;
+            }
+            catch (Exception e)
+            {
+                //error.Text = "Failed to register iisu data: " + e.Message;
+            }
+        }
+
 
 
         private void SetEllipsePosition(FrameworkElement ellipse, Joint hoverJoint)

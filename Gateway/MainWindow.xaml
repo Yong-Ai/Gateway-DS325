@@ -5,10 +5,11 @@
         Title="Gateway DDS" Height="1920" Width="1080" Loaded="Window_Loaded_1" >
 
     <Canvas>
+
         <Grid Background="{x:Null}">
         
         <Image Height="1920" HorizontalAlignment="Left" Margin="0,0,0,0" Name="background" Stretch="UniformToFill" VerticalAlignment="Top" Width="1080" Source="/Gateway;component/Images/background.jpg" />
-        <TextBlock Text="Drag Icons here to access content" Margin="143,370,1112,0" FontSize="50" HorizontalAlignment="Center" />
+        <TextBlock x:Name="txtblock" Text="Drag Icons here to access content" Margin="143,370,1112,0" FontSize="50" HorizontalAlignment="Center" />
         <m:Map x:Name="myMap" CredentialsProvider="Ak4hNCoixJgvQuHZM66im9rfhq4zmx_Ksllh9BrlJKre-avQkFas0E303BPdyoKi"  Width="900" Height="900" DataContext="{Binding}" Background="White" BorderThickness="0" ZoomLevel="5" Margin ="1100,500,0,0 " HorizontalAlignment="Left" VerticalAlignment="Top" ViewChangeOnFrame="MyMap_ViewChangeOnFrame" MouseLeftButtonDown="myMap_MouseLeftButtonDown">
             <m:Map.Center>
                 <m:Location/>
@@ -26,7 +27,23 @@
         <WebBrowser Name="browser" Height="900" Width="900"   Margin ="1100,500,0,0 " HorizontalAlignment="Left" VerticalAlignment="Top"></WebBrowser>
         <Button Content="Plus" Height="23" HorizontalAlignment="Left" Margin="76,304,0,0" Name="Plus" VerticalAlignment="Top" Width="75" Click="Plus_Click" />
         <Button Content="Minus" Height="23" HorizontalAlignment="Left" Margin="200,304,0,0" Name="Minus" VerticalAlignment="Top" Width="75" Click="Minus_Click" />
+
+
+
+
+        </Grid>
+
+        <Ellipse Canvas.Left="20" Canvas.Top="30" Height="70" Name="leftEllipse" Width="70" Opacity="1">
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="Images/palm.png"/>
+            </Ellipse.Fill>
+        </Ellipse>
+
+        <Ellipse Canvas.Left="282" Canvas.Top="30" Height="70" Name="rightEllipse" Width="70" Opacity="1" >
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="Images/palm.png"/>
+            </Ellipse.Fill>
+        </Ellipse>
         
-    </Grid>
-        </Canvas>
+    </Canvas>
 </Window>
