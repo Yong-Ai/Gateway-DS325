@@ -388,7 +388,8 @@ namespace WpfApplication1
                                     scaledJointRight.Position.Y > 80 && scaledJointRight.Position.Y < 200)
                                 {
 
-                                    if (scaledJointLeft.Position.X > 30 && scaledJointLeft.Position.X < 190)
+                                    if (scaledJointLeft.Position.Y > 80 && scaledJointLeft.Position.Y < 200
+                                        && scaledJointLeft.Position.X > 30 && scaledJointLeft.Position.X < 190)
                                     {
                                         if (overmaps)
                                         {
@@ -413,7 +414,8 @@ namespace WpfApplication1
                                     }
 
 
-                                    if (scaledJointLeft.Position.X > 280 && scaledJointLeft.Position.X < 340)
+                                    if (scaledJointLeft.Position.Y > 80 && scaledJointLeft.Position.Y < 200 && 
+                                        scaledJointLeft.Position.X > 280 && scaledJointLeft.Position.X < 340)
                                     {
                                         if (overmuseum)
                                         {
@@ -438,13 +440,14 @@ namespace WpfApplication1
                                     }
 
 
-                                    if (scaledJointRight.Position.X > 570 && scaledJointRight.Position.X < 720)
+                                    if (scaledJointRight.Position.X > 570 && scaledJointRight.Position.X < 720
+                                        && scaledJointRight.Position.Y > 80 && scaledJointRight.Position.Y < 200)
                                     {
                                         if (overfood)
                                         {
                                             if (frame.Timestamp - firstframe > 1000)
                                             {
-                                                displayEat();
+                                                //displayEat();
                                             }
                                         }
                                         else
@@ -462,7 +465,8 @@ namespace WpfApplication1
                                         overfood = false;
                                     }
 
-                                    if (scaledJointRight.Position.X > 810 && scaledJointRight.Position.X < 950)
+                                    if (scaledJointRight.Position.X > 810 && scaledJointRight.Position.X < 950
+                                        && scaledJointRight.Position.Y > 80 && scaledJointRight.Position.Y < 200)
                                     {
                                         if (overstadium)
                                         {
@@ -626,7 +630,8 @@ namespace WpfApplication1
                 //set to near mode
                 this.Sensor.SkeletonStream.EnableTrackingInNearRange = true;
                 this.Sensor.DepthStream.Range = DepthRange.Near; // Depth in near range enabled
-                this.Sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                //this.Sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                this.Sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
                 this.Sensor.SkeletonStream.Enable(smoothingParam);
 
 
