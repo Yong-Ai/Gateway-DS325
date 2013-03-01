@@ -168,6 +168,48 @@ namespace WpfApplication1
 
         }
 
+
+
+        void displayEat()
+        {
+            myMap.Margin = new Thickness(1100d, mapImg.Margin.Top, mapImg.Margin.Right, mapImg.Margin.Bottom);
+            stadiumImg.Margin = new Thickness(1100d, stadiumImg.Margin.Top, stadiumImg.Margin.Right, stadiumImg.Margin.Bottom);
+            museumImg.Margin = new Thickness(1100d, museumImg.Margin.Top, museumImg.Margin.Right, museumImg.Margin.Bottom);
+            browser.Margin = new Thickness(90d, browser.Margin.Top, browser.Margin.Right, browser.Margin.Bottom);
+            browser.Navigate(new Uri("http://www.just-eat.dk/area/5000-odense-c"));
+        }
+
+
+        void displayMuseum()
+        {
+            myMap.Margin = new Thickness(1100d, mapImg.Margin.Top, mapImg.Margin.Right, mapImg.Margin.Bottom);
+            browser.Margin = new Thickness(1100d, browser.Margin.Top, browser.Margin.Right, browser.Margin.Bottom);
+            stadiumImg.Margin = new Thickness(1100d, stadiumImg.Margin.Top, stadiumImg.Margin.Right, stadiumImg.Margin.Bottom);
+            museumImg.Margin = new Thickness(90d, museumImg.Margin.Top, museumImg.Margin.Right, museumImg.Margin.Bottom);
+        }
+
+
+        void displayStadion()
+        {
+            myMap.Margin = new Thickness(1100d, mapImg.Margin.Top, mapImg.Margin.Right, mapImg.Margin.Bottom);
+            museumImg.Margin = new Thickness(1100d, museumImg.Margin.Top, museumImg.Margin.Right, museumImg.Margin.Bottom);
+            browser.Margin = new Thickness(1100d, browser.Margin.Top, browser.Margin.Right, browser.Margin.Bottom);
+            stadiumImg.Margin = new Thickness(90d, stadiumImg.Margin.Top, stadiumImg.Margin.Right, stadiumImg.Margin.Bottom);
+        }
+
+
+        void displayMaps()
+        {
+            stadiumImg.Margin = new Thickness(1100d, stadiumImg.Margin.Top, stadiumImg.Margin.Right, stadiumImg.Margin.Bottom);
+            museumImg.Margin = new Thickness(1100d, museumImg.Margin.Top, museumImg.Margin.Right, museumImg.Margin.Bottom);
+            myMap.Margin = new Thickness(90d, mapImg.Margin.Top, mapImg.Margin.Right, mapImg.Margin.Bottom);
+            browser.Margin = new Thickness(1100d, browser.Margin.Top, browser.Margin.Right, browser.Margin.Bottom);
+            myMap.Center = new Location(55.396172, 10.39079);
+            myMap.ZoomLevel = 10.0;
+        }
+
+
+
         private void Target_Drop(object sender, DragEventArgs e)
         {
             String btnTag = (String)e.Data.GetData(typeof(String));
@@ -267,7 +309,11 @@ namespace WpfApplication1
         }
 
 
-
+        bool overmaps = false;
+        bool overfood = false;
+        bool overstadium = false;
+        bool overmuseum = false;
+        long firstframe = -1;
 
 
         private void OnSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
@@ -322,12 +368,123 @@ namespace WpfApplication1
                         // Only consider tracked skeletons.
                         if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
                         {
-                            var scaledJointLeft = skeleton.Joints[JointType.HandLeft].ScaleTo(900, 540, .8f, .8f);
-                            var scaledJointRight = skeleton.Joints[JointType.HandRight].ScaleTo(900, 540, .8f, .8f);
+                            var scaledJointLeft = skeleton.Joints[JointType.HandLeft].ScaleTo(1080, 540, .5f, .5f);
+                            var scaledJointRight = skeleton.Joints[JointType.HandRight].ScaleTo(1080, 540, .5f, .5f);
 
 
                             SetEllipsePosition(leftEllipse, scaledJointLeft);
                             SetEllipsePosition(rightEllipse, scaledJointRight);
+
+                            txtblock.Text = "x: " + scaledJointRight.Position.X + "  y: " + scaledJointLeft.Position.Y;
+
+
+                            // Y e bun la stanga
+                            if (scaledJointLeft.Position.Y > 80 && scaledJointLeft.Position.Y < 200) {
+
+                                if (scaledJointLeft.Position.X > 30 && scaledJointLeft.Position.X < 190)
+                                {
+                                    if (overmaps)
+                                    {
+                                        if (frame.Timestamp - firstframe > 3000)
+                                        {
+                                            displayMaps();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        overmaps = true;
+                                        firstframe = frame.Timestamp;
+                                    }
+
+
+                                    //txtblock.Text = frame.Timestamp.ToString();
+
+                                }
+                                else
+                                {
+                                    overmaps = false;
+                                }
+
+
+                                if ( scaledJointLeft.Position.X > 280 && scaledJointLeft.Position.X < 340 ||
+                                     scaledJointRight.Position.X > 280 && scaledJointRight.Position.X < 340 )
+                                {
+                                    if (overmuseum)
+                                    {
+                                        if (frame.Timestamp - firstframe > 3000)
+                                        {
+                                            displayMuseum();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        overmuseum = true;
+                                        firstframe = frame.Timestamp;
+                                    }
+
+
+                                    //txtblock.Text = frame.Timestamp.ToString();
+
+                                }
+                                else
+                                {
+                                    overmuseum = false;
+                                }
+
+
+                                if (scaledJointRight.Position.X > 510 && scaledJointRight.Position.X < 700)
+                                {
+                                    if (overfood)
+                                    {
+                                        if (frame.Timestamp - firstframe > 3000)
+                                        {
+                                            displayEat();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        overfood = true;
+                                        firstframe = frame.Timestamp;
+                                    }
+
+
+                                    //txtblock.Text = frame.Timestamp.ToString();
+
+                                }
+                                else
+                                {
+                                    overfood = false;
+                                }
+
+                                if (scaledJointRight.Position.X > 810 && scaledJointRight.Position.X < 950)
+                                {
+                                    if (overstadium)
+                                    {
+                                        if (frame.Timestamp - firstframe > 3000)
+                                        {
+                                            displayStadion();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        overstadium = true;
+                                        firstframe = frame.Timestamp;
+                                    }
+
+
+                                    //txtblock.Text = frame.Timestamp.ToString();
+
+                                }
+                                else
+                                {
+                                    overstadium = false;
+                                }
+
+
+                            }
+
+                            //mapsButton.
+
                         }
                     }
 
@@ -368,7 +525,7 @@ namespace WpfApplication1
                 overzoom(zoomStage.Value);
             }
 
-            txtblock.Text = zoomStage.Value.ToString();
+            //txtblock.Text = zoomStage.Value.ToString();
 
             device.ReleaseFrame();
             device.UpdateFrame(true);
